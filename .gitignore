@@ -1,0 +1,4 @@
+.env
+package_lock.json
+petittest.js
+node_modules/
