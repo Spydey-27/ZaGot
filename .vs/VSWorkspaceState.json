@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\commands",
+    "\\commands\\utils",
+    "\\events",
+    "\\events\\client",
+    "\\utils",
+    "\\utils\\handlers"
+  ],
+  "SelectedNode": "\\package.json",
+  "PreviewInSolutionExplorer": false
+}

@@ -1,4 +1,4 @@
-const prefix = 'hey jarvis ';
+/*const prefix = 'hey jarvis ';
 
 module.exports = {
     name: 'messageCreate',
@@ -15,4 +15,4 @@ module.exports = {
         let cmd = client.commands.get(cmdName);
         if (cmd) cmd.run(client, message, args);
     },
-};
+};*/

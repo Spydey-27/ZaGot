@@ -1,12 +1,10 @@
-module.exports = {
-    name: 'ready',
-    once: true,
-    async execute(client){
-        console.log('im ready');
+const { Events } = require('discord.js');
 
-        //const devGuild = await client.guilds.cache.get('981493939154599956');
-        //devGuild.commands.set(client.commands.map(cmd => cmd));
-        client.application.commands.set(client.commands.map(cmd => cmd));
+module.exports = {
+	name: Events.ClientReady,
+    once: true,
+    execute(client){
+        console.log(`Ready! Logged in as ${client.user.tag}`);
 
     },
 };

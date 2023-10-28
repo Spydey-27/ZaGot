@@ -1,88 +1,82 @@
-const { MessageEmbed } = require('discord.js');
-const messageCreate = require('../../events/guild_messages/messageCreate');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const wait = require('node:timers/promises').setTimeout;
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { request } = require('undici');
+
 module.exports = {
-    name: 'ctf',
-    description: 'Affiche les prochains CTF',
-    category: 'utils',
-    usage: 'ctf <nombre de ctf> <qui se terminent dans combien de jour?>',
-    examples: ['ctf 2 14\nAffiche les 2 premiers ctfs qui se terminent au max dans 14 jours.'],
-    options: [
-        {
-           name: 'limit',
-           description: "Nombre de ctf à afficher max 5",
-           type: "NUMBER",
-           required: true,
-           maxValue: 5,
-           minValue: 1,
-        },
-        {
-            name: 'jours',
-            description: "Ctf qui se terminent dans combien de jours ?",
-            type: "NUMBER",
-            required: true,
-            maxValue: 14,
-            minValue: 1,
-         }
-
-    ],
-    runSlash: async(client, interaction) =>{
-        const number = interaction.options.getNumber('limit');
-        const jours = interaction.options.getNumber('limit');
-        const tempsunix_today = client.readyTimestamp;
-        const tempsunix_jours = jours*86400 + tempsunix_today;
-        await fetch(`https://ctftime.org/api/v1/events/?limit=${number}&start=${tempsunix_today}&finish=${tempsunix_jours}`)
-           
-            
-            .then(res => res.json())
-            .then(async data => {
-                let embed=[];
-                for(let i = 0; i < number; i++)
-                {
-                    const img = data[i].logo;
-                    embed[i] = {
-                        color: 0x0099ff,
-                        title: `${i+1}- ${data[i].title}`,
-                        description: data[i].description,
-                        url: data[i].ctftime_url,
-                        thumbnail: 
-                        {
-                            url: img,
-                        },
-                        fields:[
-                            {
-                            name: 'Date de  début',
-                            value: data[i].start,
-                        },
-                        {
-                            name: 'Durée',
-                            value: `${data[i].duration.days} jours ---- ${data[i].duration.hours} heures`,
-                        },
-                        {
-                            name: 'Format',
-                            value: data[i].format,
-                        },
-                        ],
-                        footer:
-                        {
-                            text: 'thanks to CTFTIME.org',
-                            icon_url: 'https://ctftime.org/static/images/ct/logo.svg'
-                        },
-                    };
-                   if(i == 0)
-                   {
-                        await interaction.reply({ content: 'Salut @everyone, voici les prochains CTF:' , embeds: [embed[0]]});
-                   }
-                   else{
-                    await interaction.followUp({ embeds: [embed[i]]});
-                   }
-                   
-                }
-               
-            });
-
-       
+    data: new SlashCommandBuilder()
+        .setName('ctf')
+        .setDescription('Affiche les prochains CTF')
+        .addIntegerOption(option =>
+            option
+                .setName('limit')
+                .setDescription('Nombre de ctf à afficher max 5')
+                .setRequired(true)
+                .setMinValue(1)
+                .setMaxValue(5),
+        )
+        .addIntegerOption(option =>
+            option
+                .setName('dans')
+                .setDescription('qui commencent dans combien de jours  ?')
+                .setRequired(true)
+                .setMinValue(0)
+                .setMaxValue(14),
+        ),
+    info: {
+        name: 'ctf',
+        description: 'Affiche les prochains CTF',
+        category: 'utils',
+        usage: 'ctf <nombre de ctf> <qui commecent dans combien de jours ( 0 = aujourd\'hui) ?>',
+        examples: ['ctf 2 14\nAffiche les 2 premiers ctfs qui commencent dans 14 jours.'],
     },
-};
 
+    async execute(interaction) {
+        const number = interaction.options.getInteger('limit');
+        const jours = interaction.options.getInteger('dans');
+        const tempsunix_today = interaction.client.readyTimestamp;
+        const tempsunix_jours = jours * 86400 + tempsunix_today;
+        const query = new URLSearchParams({
+            limit: number,
+            start: tempsunix_jours,
+        });
+
+        const dictResult = await request(`https://ctftime.org/api/v1/events/?${query}`);
+        let apiResponse = await dictResult.body.json();
+        if (!apiResponse) {
+            return interaction.reply(`No results found for .`);
+        }
+
+        const ctf_builder = [];
+        
+
+        for (let i = 0; i < number; i++) {
+            for (const [key, value] of Object.entries(apiResponse[i])) {
+                if (value == null || value == '') {
+                    apiResponse[i][key] = 'Non renseigné';
+                }
+              }
+              
+
+            ctf_builder[i] = new EmbedBuilder()
+                .setColor('#f54ea7')
+                .setTitle(apiResponse[i].title)
+                .setDescription(apiResponse[i].description)
+                .setURL(apiResponse[i].ctftime_url)
+                .setThumbnail(apiResponse[i].logo)
+                .addFields(
+                    { name: 'Date de  début', value: apiResponse[i].start },
+                    { name: 'Durée', value: `${apiResponse[i].duration.days} jours ---- ${apiResponse[i].duration.hours} heures` },
+                    { name: 'Format', value: apiResponse[i].format },
+                )
+                .setFooter({text:'thanks to CTFTIME.org', icon_url :'https://ctftime.org/static/images/ct/logo.svg'});
+            
+            if (i == 0) {
+                await interaction.reply({ content: 'Salut , voici les prochains CTF:', embeds: [ctf_builder[0]] });
+            }
+            else {
+                await interaction.followUp({ embeds: [ctf_builder[i]] });
+            }
+        }
+
+    }
+
+}

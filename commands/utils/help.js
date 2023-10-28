@@ -1,4 +1,68 @@
-const { MessageEmbed } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const path = require('node:path');
+const fs = require('node:fs');
+
+// ---------------- A optimiser et recupérer du fichier deploy-commands.js ---------------- //
+let commands = [{}];
+// Grab all the command files from the commands directory you created earlier
+const foldersPath = path.dirname(__dirname);
+ // 'commands' is the folder name, you can change this to match yours
+const commandFolders = fs.readdirSync(foldersPath);
+
+for (const folder of commandFolders) {
+	// Grab all the command files from the commands directory you created earlier
+	const commandsPath = path.join(foldersPath, folder);
+	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+	// Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
+	for (const file of commandFiles) {
+		const filePath = path.join(commandsPath, file);
+		const command = require(filePath);
+		if ('info' in command && 'execute' in command) {
+            commands.push(command.info);
+        }
+	}
+}
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('help')
+        .setDescription('Commande help')
+        .addStringOption(option => 
+            option
+                .setName('command')
+                .setDescription('Taper le nom de votre commande')
+                .setRequired(false),
+        ),
+    async execute(interaction) {
+        const cmd = interaction.options.getString('command');
+        if (cmd) {
+            for ( let i = 0; i < commands.length; i++) {
+                const command = commands[i];
+                if (command.name == cmd) {
+                    const ArgsEmbed = new EmbedBuilder()
+                        .setColor('#f54ea7')
+                        .setTitle(`\`${command.name}\``)
+                        .setDescription(command.description)
+                        .addFields({
+
+                            name: 'Utilisation :',
+                            value: command.usage
+                        },
+                        {
+                            name: 'Exemples:',
+                            value: `\\${command.examples}`
+                        }
+                        )
+                    
+                    return interaction.reply({ embeds: [ArgsEmbed], ephemeral: true});
+                }
+            }
+            return interaction.reply({content: 'cette commande n\'existe pas!', ephemeral: true});
+        }
+    },
+};
+
+/* const { MessageEmbed } = require('discord.js');
 const { readdirSync } = require('fs');
 const messageCreate = require('../../events/guild_messages/messageCreate');
 const commandFolder = readdirSync('./commands');
@@ -58,3 +122,4 @@ module.exports = {
     },
 };
 
+*/
