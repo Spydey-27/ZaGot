@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Répertoire contenant les fichiers secrets
 secrets_dir="/secrets"
