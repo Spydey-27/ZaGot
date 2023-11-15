@@ -1,24 +1,35 @@
 #!/bin/sh
 
-# Répertoire contenant les fichiers secrets
-secrets_dir="/secrets"
 
-# Chemin du fichier .env
-env_file="/usr/src/bot/ZaGot/.env"
 
-# Supprimer le fichier .env s'il existe
-[ -e "$env_file" ] && rm "$env_file"
 
-# Boucle à travers les fichiers dans le répertoire /secrets
-for secret_file in "$secrets_dir"/*; do
-    # Extraire le nom de la clé du nom du fichier
-    key=$(basename "$secret_file")
-    # Lire la valeur depuis le fichier
-    value=$(cat "$secret_file" | tr -d '[:space:]')
+# Supprimer le fichier kubeconfig s'il existe
+[ -e "$kubeconfig_file" ] && rm "$kubeconfig_file"
 
-    # Ajouter la clé et la valeur au fichier .env
-    echo "$key=$value" >> "$env_file"
-done
+# Contenu du fichier kubeconfig
+cat <<EOF > "$kubeconfig_file"
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: "$CERTIFICATE_AUTHORITY_DATA"
+    server: https://192.168.1.190:6443
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: kubernetes-admin
+  name: kubernetes-admin@kubernetes
+current-context: kubernetes-admin@kubernetes
+kind: Config
+preferences: {}
+users:
+- name: kubernetes-admin
+  user:
+    client-certificate-data: $CLIENT_CERTIFICATE_DATA
+    client-key-data: $CLIENT_KEY_DATA
+EOF
 
-echo "Les valeurs ont été écrites dans $env_file"
+echo "Le fichier kubeconfig a été généré avec succès : $kubeconfig_file"
+
+
 node index.js
