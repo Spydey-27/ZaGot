@@ -4,7 +4,7 @@
 secrets_dir="/secrets"
 
 # Chemin du fichier .env
-env_file="/usr/src/bot/ZaGot.env"
+env_file="/usr/src/bot/ZaGot/.env"
 
 # Supprimer le fichier .env s'il existe
 [ -e "$env_file" ] && rm "$env_file"
