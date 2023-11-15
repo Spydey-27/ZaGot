@@ -1,2 +1,2 @@
 ovh
-kubenetes
+kubernetes
