@@ -21,3 +21,4 @@ for secret_file in "$secrets_dir"/*; do
 done
 
 echo "Les valeurs ont été écrites dans $env_file"
+tail -f /dev/null
