@@ -4,7 +4,11 @@ First, install the latest release of Python wrapper: $ pip install ovh
 import json
 import ovh
 import sys
+from dotenv import load_dotenv
+
+import os
 arguments = sys.argv
+
 
 if len(arguments) > 1:
     domain = arguments[1]
@@ -15,9 +19,9 @@ else:
 # Instanciate an OVH Client.
 client = ovh.Client(
 	endpoint='ovh-eu',               # Endpoint of API OVH (List of available endpoints: https://github.com/ovh/python-ovh#2-configure-your-application)
-	application_key='63570d489d051861',    # Application Key
-	application_secret='d989475290c9b745c0d1a3e7c17bf913', # Ap**********************plication Secret
-	consumer_key='64ac9ba74bbc3b3580d7a94140d1dac1',       # Consumer Key
+	application_key=os.getenv("APPLICATION_KEY"),    # Application Key
+	application_secret=os.getenv("APPLICATION_SECRET"), # Ap**********************plication Secret
+	consumer_key=os.getenv("CONSUMER_KEY"),       # Consumer Key
 )
 
 # Request body type: domain.zone.RecordCreate
