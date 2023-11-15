@@ -3,6 +3,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection } = require('discord.js');
 const dotenv = require('dotenv'); // Permet de charger les variables d'environnement à partir d'un fichier .env*
+const { exec } = require('child_process');
+const util = require('util');
 
 // ---------------- Client ------//
 const client = new Client({ intents: 3276799 });
@@ -18,6 +20,21 @@ client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
+const execPromise = util.promisify(exec);
+async function run_sh() {
+	try {
+		await execPromise('./recup_env.sh');
+	}
+	catch (error) {
+		console.error('Sortie d\'erreur :', error.stderr);
+		console.error(`Erreur lors de l'exécution de la commande : ${error}`);
+	}
+}
+
+if (process.env.DISCORD_TOKEN === undefined || process.env.DISCORD_TOKEN === null || process.env.DISCORD_TOKEN === '') {
+	run_sh();
+
+}
 
 for (const folder of commandFolders) {
 	const commandsPath = path.join(foldersPath, folder);
