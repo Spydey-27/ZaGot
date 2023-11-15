@@ -2,3 +2,4 @@
 ./package_lock.json
 ./petittest.js
 ./node_modules/
+node_modules
