@@ -16,7 +16,7 @@ module.exports = {
 		description: 'ouvres visual studio code sur le serveur',
 		category: 'stockage',
 		usage: 'code <confidentiel>',
-		examples: ['\\code non'],
+		examples: ['code non'],
 	},
 	async execute(interaction) {
 	/*	const file = interaction.options.getString('fichier');

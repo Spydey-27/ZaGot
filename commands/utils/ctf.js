@@ -26,7 +26,7 @@ module.exports = {
 		description: 'Affiche les prochains CTF',
 		category: 'utils',
 		usage: 'ctf <nombre de ctf> <qui commecent dans combien de jours ( 0 = aujourd\'hui) ?>',
-		examples: ['\\ctf 1 2'],
+		examples: ['ctf 1 2'],
 	},
 
 	async execute(interaction) {

@@ -30,15 +30,14 @@ module.exports = {
 		description: 'ouvres visual studio code sur le serveur',
 		category: 'stockage',
 		usage: 'code <confidentiel>',
-		examples: ['\\code oui'],
+		examples: ['code oui'],
 	},
 	async execute(interaction) {
-
-		for (let i = 0; i < commands.length; i++) {
+		/*for (let i = 0; i < commands.length; i++) {
 			const command = commands[i];
-
-            if
-			interaction.reply({ content: `${command.examples}` });
-		}
+            if (command.examples) {
+                'Zagot\events\client\interactionCreate.js'.execute(test)
+            }
+		}*/
 	},
 };
