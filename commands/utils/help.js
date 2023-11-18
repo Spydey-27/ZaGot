@@ -33,6 +33,13 @@ module.exports = {
 				.setDescription('Taper le nom de votre commande')
 				.setRequired(false),
 		),
+	info: {
+		name: 'help',
+		description: 'L\'aide pour savoir comment marchent les commandes',
+		category: 'utils',
+		usage: 'help <command>',
+		examples: ['\\help ctf'],
+	},
 	async execute(interaction) {
 		const cmd = interaction.options.getString('command');
 		if (cmd) {

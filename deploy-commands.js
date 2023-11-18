@@ -5,7 +5,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 const discord_token = process.env.DISCORD_TOKEN;
-const guild_id = process.env.GUILD_ID;
 const client_id = process.env.CLIENT_ID;
 
 const commands = [];
@@ -43,15 +42,15 @@ const rest = new REST().setToken(discord_token);
 		// reset all commands
 
 		// The put method is used to fully refresh all commands globally
-		const data_guild = await rest.put(
+		/*const data_guild = await rest.put(
 			Routes.applicationCommands(client_id),
 			{ body: commands },
-		);
+		); */ // Permet de tester sur tous les serveurs
 
-		/* const data_guild = await rest.put(
-			Routes.applicationGuildCommands(client_id, guild_id), // normal si les commandes sont en doubles !
+		const data_guild = await rest.put(
+			Routes.applicationGuildCommands(client_id, process.env.GUILD_ID), // normal si les commandes sont en doubles !
 			{ body: commands },
-		);*/
+		); // Permet de tester sur un seul serveur
 
 
 		console.log(`Successfully reloaded  & ${data_guild.length} application (/) commands.`);
