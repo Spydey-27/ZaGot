@@ -10,7 +10,7 @@ module.exports = {
 		description: 'Répond par pong',
 		category: 'utils',
 		usage: 'ping',
-		examples: ['ping'],
+		examples: ['/ping'],
 	},
 	async execute(interaction) {
 		await interaction.reply('Pong!');

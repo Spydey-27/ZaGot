@@ -17,7 +17,7 @@ for (const folder of commandFolders) {
 		const filePath = path.join(commandsPath, file);
 		const command = require(filePath);
 		if ('info' in command && 'execute' in command) {
-			commands.push(command.info);
+			commands.push(command);
 		}
 	}
 }
@@ -33,11 +33,16 @@ module.exports = {
 		examples: ['code oui'],
 	},
 	async execute(interaction) {
-		/*for (let i = 0; i < commands.length; i++) {
-			const command = commands[i];
-            if (command.examples) {
-                'Zagot\events\client\interactionCreate.js'.execute(test)
-            }
-		}*/
-	},
+        for (let i = 0; i < commands.length; i++) {
+          const command = commands[i];
+          if (command.info && command.info.examples) {
+            command.info.examples.forEach(example => {
+                console.log(example);
+                command.execute(example);
+                
+                
+            });
+          }
+        }
+      },
 };

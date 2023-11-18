@@ -16,7 +16,7 @@ module.exports = {
 		description: 'Demande l\'url pour accéder au site de stockage',
 		category: 'utils',
 		usage: 'url <Affiche pour tout le monde ou seulement pour toi >',
-		examples: ['url non'],
+		examples: ['/url confidentiel:false'],
 	},
 	async execute(interaction) {
 		const response = interaction.options.getBoolean('confidentiel');

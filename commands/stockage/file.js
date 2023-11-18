@@ -16,7 +16,7 @@ module.exports = {
 		description: 'ouvres le site de stockage sur le serveur',
 		category: 'stockage',
 		usage: 'file <confidentiel>',
-		examples: ['file non'],
+		examples: ['/file confidentiel:false'],
 	},
 	async execute(interaction) {
 	/*	const file = interaction.options.getString('fichier');

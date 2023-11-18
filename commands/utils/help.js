@@ -38,7 +38,7 @@ module.exports = {
 		description: 'L\'aide pour savoir comment marchent les commandes',
 		category: 'utils',
 		usage: 'help <command>',
-		examples: ['help ctf'],
+		examples: ['/help command:ctf'],
 	},
 	async execute(interaction) {
 		const cmd = interaction.options.getString('command');
