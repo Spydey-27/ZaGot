@@ -53,6 +53,7 @@ module.exports = {
 							],
 						},
 					};
+                    console.log(JSON.stringify.newInteraction.options);
 					await command.execute(newInteraction, true);
 				}
 			}

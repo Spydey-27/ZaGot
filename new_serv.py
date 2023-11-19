@@ -11,8 +11,8 @@ os.system(f"mkdir /mnt/data/{discordid}")
 # Charger la configuration du cluster Kubernetes depuis le fichier kubeconfig
 config.load_kube_config()
 
+unique_name_suffix = discordid
 # Utiliser discordid pour rendre chaque ressource unique
-unique_name_suffix = f"-{discordid}"
 
 # Créer un objet PersistentVolume
 volume = client.V1PersistentVolume(
@@ -178,7 +178,7 @@ ingress = client.NetworkingV1Api().create_namespaced_ingress(
         spec=client.V1IngressSpec(
             rules=[
                 client.V1IngressRule(
-                    host=f"upload-{unique_name_suffix}.vsnu.fr",
+                    host=f"upload.{unique_name_suffix}.vsnu.fr",
                     http=client.V1HTTPIngressRuleValue(
                         paths=[
                             client.V1HTTPIngressPath(
@@ -197,7 +197,7 @@ ingress = client.NetworkingV1Api().create_namespaced_ingress(
                     )
                 ),
                 client.V1IngressRule(
-                    host=f"code-{unique_name_suffix}.vsnu.fr",
+                    host=f"code.{unique_name_suffix}.vsnu.fr",
                     http=client.V1HTTPIngressRuleValue(
                         paths=[
                             client.V1HTTPIngressPath(
@@ -216,7 +216,7 @@ ingress = client.NetworkingV1Api().create_namespaced_ingress(
                     )
                 ),
                 client.V1IngressRule(
-                    host=f"memo-{unique_name_suffix}.vsnu.fr",
+                    host=f"memo.{unique_name_suffix}.vsnu.fr",
                     http=client.V1HTTPIngressRuleValue(
                         paths=[
                             client.V1HTTPIngressPath(

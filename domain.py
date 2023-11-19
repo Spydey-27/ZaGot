@@ -2,6 +2,7 @@
 import json
 import ovh
 import sys
+from dotenv import load_dotenv
 import os
 arguments = sys.argv
 
