@@ -42,7 +42,7 @@ const rest = new REST().setToken(discord_token);
 		// reset all commands
 
 		// The put method is used to fully refresh all commands globally
-		/*const data_guild = await rest.put(
+		/* const data_guild = await rest.put(
 			Routes.applicationCommands(client_id),
 			{ body: commands },
 		); */ // Permet de tester sur tous les serveurs

@@ -15,22 +15,30 @@ module.exports = {
 		name: 'code',
 		description: 'ouvres visual studio code sur le serveur',
 		category: 'stockage',
+		type: 5,
+		group : null,
+		sub_command: null,
+		nom : 'confidentiel',
+		value: false,
 		usage: 'code <confidentiel>',
-		examples: ['/code confidentiel:false'],
+		examples: ['confidentiel'],
 	},
-	async execute(interaction) {
+	async execute(interaction, test = false) {
+		console.log(test);
 	/*	const file = interaction.options.getString('fichier');
 		const language = interaction.options.getString('language'); */
 		const response = interaction.options.getBoolean('confidentiel');
 		const url = 'https://code.' + interaction.guildId + '.vsnu.fr' ;
-
-		if (response) {
+		
+		if (test == true) {
+			await interaction.followUp('test');
+		}
+		else if (response) {
 			return interaction.reply({ content: `Voici l'url pour accéder a visual studio : ${url}`, ephemeral: true });
 		}
 		else {
 			return interaction.reply(`Voici l'url pour accéder a visual studio : ${url}`);
 		}
-
 
 	},
 };

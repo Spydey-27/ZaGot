@@ -33,16 +33,28 @@ module.exports = {
 		examples: ['code oui'],
 	},
 	async execute(interaction) {
-        for (let i = 0; i < commands.length; i++) {
-          const command = commands[i];
-          if (command.info && command.info.examples) {
-            command.info.examples.forEach(example => {
-                console.log(example);
-                command.execute(example);
-                
-                
-            });
-          }
-        }
-      },
-};
+		//  interaction.reply('test : en cours');
+        await interaction.reply('test : en cours');
+		for (let i = 0; i < commands.length; i++) {
+			const command = commands[i];
+			if (command.info && command.info.examples) { // Suppression de la condition && command.name != 'test'
+				for (const example of command.info.examples) {
+					console.log(example);
+					const newInteraction = {
+						...interaction, // Copie toutes les propriétés de l'interaction originale
+						commandName: command.name, // Écrase commandName
+						options: {
+							'_hoistedOptions': [
+								{
+									'name': command.info.nom,
+									'value': command.info.value,
+									'type': command.info.type,
+								},
+							],
+						},
+					};
+					await command.execute(newInteraction, true);
+				}
+			}
+		}
+	} };

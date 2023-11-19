@@ -15,8 +15,13 @@ module.exports = {
 		name: 'memo',
 		description: 'ouvres un fichier memo sur le serveur',
 		category: 'stockage',
+		type: 5,
+		group : null,
+		sub_command: null,
+		nom : 'confidentiel',
+		value: false,
 		usage: 'memo <confidentiel>',
-		examples: ['/memo confidentiel:false'],
+		examples: ['confidentiel:false'],
 	},
 	async execute(interaction) {
 	/*	const file = interaction.options.getString('fichier');
