@@ -12,6 +12,8 @@ module.exports = {
 		async function runPythonScript() {
 			try {
 				await execPromise('python3 -u domain.py ' + server);
+				await execPromise('python3 -u domain.py ' + server);
+
 			}
 			catch (error) {
 				console.error('Sortie d\'erreur :', error.stderr);
