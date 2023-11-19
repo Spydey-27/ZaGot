@@ -24,7 +24,7 @@ module.exports = {
 		examples: ['confidentiel'],
 	},
 	async execute(interaction, test = false) {
-		console.log(test);
+		console.log(interaction);
 	/*	const file = interaction.options.getString('fichier');
 		const language = interaction.options.getString('language'); */
 		const response = interaction.options.getBoolean('confidentiel');

@@ -44,7 +44,7 @@ module.exports = {
 						...interaction, // Copie toutes les propriétés de l'interaction originale
 						commandName: command.name, // Écrase commandName
 						options: {
-							'_hoistedOptions': [
+							"_hoistedOptions": [
 								{
 									'name': command.info.nom,
 									'value': command.info.value,
@@ -53,7 +53,7 @@ module.exports = {
 							],
 						},
 					};
-                    console.log(JSON.stringify.newInteraction.options);
+                    console.log(newInteraction.options);
 					await command.execute(newInteraction, true);
 				}
 			}
