@@ -12,7 +12,7 @@ module.exports = {
 		async function runPythonScript() {
 			try {
 				await execPromise('python3 -u domain.py ' + server);
-				await execPromise('python3 -u domain.py ' + server);
+				await execPromise('python3 -u new_serv.py ' + server);
 
 			}
 			catch (error) {
