@@ -1,3 +1,2 @@
 ovh
 kubernetes
-dotenv
