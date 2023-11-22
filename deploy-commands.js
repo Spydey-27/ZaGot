@@ -59,4 +59,4 @@ const rest = new REST().setToken(discord_token);
 		// And of course, make sure you catch and log any errors!
 		console.error(error);
 	}
-})();
+});

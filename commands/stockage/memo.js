@@ -23,6 +23,19 @@ module.exports = {
 		usage: 'memo <confidentiel>',
 		examples: ['confidentiel:false'],
 	},
+	test:{
+		name: 'memo',
+		options: [
+			{
+				name: 'confidentiel',
+				value: false,
+				type: 5,
+			},
+		],
+		expect: 'Voici l\'url pour accéder au memo : https://memo.123456789012345678.vsnu.fr',
+		toBeEmbed: false,
+		toBeMessage: true,
+	},
 	async execute(interaction) {
 	/*	const file = interaction.options.getString('fichier');
 		const language = interaction.options.getString('language'); */
@@ -30,10 +43,10 @@ module.exports = {
 		const url = 'https://memo.' + interaction.guildId + '.vsnu.fr' ;
 
 		if (response) {
-			return interaction.reply({ content: `Voici l'url pour accéder a visual studio : ${url}`, ephemeral: true });
+			return await interaction.reply({ content: `Voici l'url pour accéder au memo : ${url}`, ephemeral: true });
 		}
 		else {
-			return interaction.reply(`Voici l'url pour accéder a visual studio : ${url}`);
+			return await interaction.reply(`Voici l'url pour accéder au memeo : ${url}`);
 		}
 
 

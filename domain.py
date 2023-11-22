@@ -49,4 +49,6 @@ if record_id is not None:
         file.write(f"{domain} {record_id}\n")
 
 print(json.dumps(result, indent=4))
+client.post("/domain/zone/vsnu.fr/refresh")
+
 

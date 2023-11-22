@@ -3,3 +3,8 @@ package_lock.json
 node_modules/
 node_modules
 commands/developpement/
+test/
+.eslintrc.json
+jest.config.js
+babel.config.js
+```

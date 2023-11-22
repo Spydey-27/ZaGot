@@ -23,6 +23,19 @@ module.exports = {
 		value: false,
 		examples: ['confidentiel:false'],
 	},
+	test:{
+		name: 'file',
+		options: [
+			{
+				name: 'confidentiel',
+				value: false,
+				type: 5,
+			},
+		],
+		expect: 'Voici l\'url pour accéder au stockage : https://file.123456789012345678.vsnu.fr',
+		toBeEmbed: false,
+		toBeMessage: true,
+	},
 	async execute(interaction) {
 	/*	const file = interaction.options.getString('fichier');
 		const language = interaction.options.getString('language'); */
@@ -30,10 +43,10 @@ module.exports = {
 		const url = 'https://file.' + interaction.guildId + '.vsnu.fr' ;
 
 		if (response) {
-			return interaction.reply({ content: `Voici l'url pour accéder au stockage : ${url}`, ephemeral: true });
+			return await interaction.reply({ content: `Voici l'url pour accéder au stockage : ${url}`, ephemeral: true });
 		}
 		else {
-			return interaction.reply(`Voici l'url pour accéder au stockage : ${url}`);
+			return await interaction.reply(`Voici l'url pour accéder au stockage : ${url}`);
 		}
 
 

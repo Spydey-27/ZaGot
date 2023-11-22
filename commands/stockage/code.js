@@ -15,29 +15,33 @@ module.exports = {
 		name: 'code',
 		description: 'ouvres visual studio code sur le serveur',
 		category: 'stockage',
-		type: 5,
-		group : null,
-		sub_command: null,
-		nom : 'confidentiel',
-		value: false,
 		usage: 'code <confidentiel>',
-		examples: ['confidentiel'],
+		examples: ['/code confidentiel:false'],
 	},
-	async execute(interaction, test = false) {
-		console.log(interaction);
+	test:{
+		name: 'code',
+		options: [
+			{
+				name: 'confidentiel',
+				value: false,
+				type: 5,
+			},
+		],
+		expect: 'Voici l\'url pour accéder a visual studio : https://code.123456789012345678.vsnu.fr',
+		toBeEmbed: false,
+		toBeMessage: true,
+	},
+	async execute(interaction) {
 	/*	const file = interaction.options.getString('fichier');
 		const language = interaction.options.getString('language'); */
 		const response = interaction.options.getBoolean('confidentiel');
 		const url = 'https://code.' + interaction.guildId + '.vsnu.fr' ;
-		
-		if (test == true) {
-			await interaction.followUp('test');
-		}
-		else if (response) {
-			return interaction.reply({ content: `Voici l'url pour accéder a visual studio : ${url}`, ephemeral: true });
+
+		if (response) {
+			return await interaction.reply({ content: `Voici l'url pour accéder a visual studio : ${url}`, ephemeral: true });
 		}
 		else {
-			return interaction.reply(`Voici l'url pour accéder a visual studio : ${url}`);
+			return await interaction.reply({ content: `Voici l'url pour accéder a visual studio : ${url}` });
 		}
 
 	},
