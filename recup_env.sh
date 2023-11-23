@@ -1,6 +1,5 @@
 #!/bin/sh
 
-mkdir -p /root/.kube
 kubeconfig_file="/root/.kube/config"
 
 # Supprimer le fichier kubeconfig s'il existe
