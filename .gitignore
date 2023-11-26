@@ -1,7 +1,5 @@
 .env
 package_lock.json
-node_modules/
-node_modules
 commands/developpement/
 test/
 .eslintrc.json
