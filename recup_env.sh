@@ -30,5 +30,5 @@ EOF
 
 echo "Le fichier kubeconfig a été généré avec succès : $kubeconfig_file"
 
-
+node deploy-commands.js
 node index.js
