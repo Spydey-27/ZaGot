@@ -178,7 +178,7 @@ ingress = client.NetworkingV1Api().create_namespaced_ingress(
         spec=client.V1IngressSpec(
             rules=[
                 client.V1IngressRule(
-                    host=f"upload.{unique_name_suffix}.vsnu.fr",
+                    host=f"file.{unique_name_suffix}.vsnu.fr",
                     http=client.V1HTTPIngressRuleValue(
                         paths=[
                             client.V1HTTPIngressPath(
