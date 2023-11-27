@@ -44,7 +44,7 @@ result = client.post("/domain/zone/vsnu.fr/record",
 result = client.post("/domain/zone/vsnu.fr/record",
 	fieldType = "A", #  (type: )
 	subDomain = domain, # Record subDomain (type: string)
-	target = "8282.65.60.141", # Target of the record (type: string)
+	target = "82.65.60.141", # Target of the record (type: string)
 	ttl = 0, # TTL of the record (type: integer)
 )
 
