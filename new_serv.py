@@ -37,7 +37,7 @@ volume_claim = client.V1PersistentVolumeClaim(
 
 # Créer un objet Pod pour code-server
 pod_vscode = client.V1Pod(
-    metadata=client.V1ObjectMeta(name=f"code-server-pod{unique_name_suffix}", labels={"ingress": "common", "app": "vscode"}),
+    metadata=client.V1ObjectMeta(name=f"code-server-pod{unique_name_suffix}", labels={"app": f"vscode{unique_name_suffix}"}),
     spec=client.V1PodSpec(
         volumes=[
             client.V1Volume(
@@ -64,7 +64,7 @@ pod_vscode = client.V1Pod(
 
 # Créer un objet Pod pour Memos
 pod_memo = client.V1Pod(
-    metadata=client.V1ObjectMeta(name=f"memo{unique_name_suffix}", labels={"ingress": "common", "app": "memo"}),
+    metadata=client.V1ObjectMeta(name=f"memo{unique_name_suffix}", labels={"app": f"memo{unique_name_suffix}"}),
     spec=client.V1PodSpec(
         volumes=[
             client.V1Volume(
@@ -84,6 +84,29 @@ pod_memo = client.V1Pod(
         ]
     ),
 )
+
+pod_httpd = client.V1Pod(
+    metadata=client.V1ObjectMeta(name=f"httpd{unique_name_suffix}", labels={"app": f"httpd{unique_name_suffix}"}),
+    spec=client.V1PodSpec(
+        volumes=[
+            client.V1Volume(
+                name="task-pv-storage",
+                persistent_volume_claim=client.V1PersistentVolumeClaimVolumeSource(claim_name=f"task-pv-claim{unique_name_suffix}")
+            )
+        ],
+        containers=[
+            client.V1Container(
+                name="httpd",
+                image="httpd:latest",
+                volume_mounts=[
+                    client.V1VolumeMount(mount_path="/usr/local/apache2/htdocs/", name="task-pv-storage")
+                ],
+                ports=[client.V1ContainerPort(container_port=80)],
+            )
+        ]
+    ),
+)
+
 
 # Créer un objet Pod pour GitLab
 # pod_gitlab = client.V1Pod(
@@ -120,7 +143,7 @@ pod_memo = client.V1Pod(
 
 # Créer un objet Pod pour Filebrowser
 pod_filebrowser = client.V1Pod(
-    metadata=client.V1ObjectMeta(name=f"filebrowser-pod{unique_name_suffix}", labels={"ingress": "common", "app": "filebrowser"}),
+    metadata=client.V1ObjectMeta(name=f"filebrowser-pod{unique_name_suffix}", labels={"app": f"filebrowser{unique_name_suffix}"}),
     spec=client.V1PodSpec(
         volumes=[
             client.V1Volume(
@@ -145,17 +168,47 @@ pod_filebrowser = client.V1Pod(
 )
 
 # Créer des objets Service
-service = client.V1Service(
-    metadata=client.V1ObjectMeta(name=f"common-service{unique_name_suffix}"),
+servicefilebrowser = client.V1Service(
+    metadata=client.V1ObjectMeta(name=f"filebrowser-service{unique_name_suffix}"),
     spec=client.V1ServiceSpec(
-        selector={"ingress": "common"},
+        selector={"app": f"filebrowser{unique_name_suffix}"},
         ports=[
-            client.V1ServicePort(port=80, target_port=80, name="http-upload"),
-            client.V1ServicePort(port=8443, target_port=8443, name="http-view"),
+            client.V1ServicePort(port=80, target_port=80, name="http-filebrowser"),
+        ]
+    )
+)
+
+servicevscode = client.V1Service(
+    metadata=client.V1ObjectMeta(name=f"vscode-service{unique_name_suffix}"),
+    spec=client.V1ServiceSpec(
+        selector={"app": f"vscode{unique_name_suffix}"},
+        ports=[
+            client.V1ServicePort(port=8443, target_port=8443, name="https-vscode"),
+        ]
+    )
+)
+
+servicememo = client.V1Service(
+    metadata=client.V1ObjectMeta(name=f"memo-service{unique_name_suffix}"),
+    spec=client.V1ServiceSpec(
+        selector={"app": f"memo{unique_name_suffix}"},
+        ports=[
             client.V1ServicePort(port=5230, target_port=5230, name="http-memo"),
         ]
     )
 )
+
+servicehttpd = client.V1Service(
+    metadata=client.V1ObjectMeta(name=f"httpd-service{unique_name_suffix}"),
+    spec=client.V1ServiceSpec(
+        selector={"app": f"httpd{unique_name_suffix}"},
+        ports=[
+            client.V1ServicePort(port=80, target_port=80, name="http-httpd"),
+        ]
+    )
+)
+
+
 
 # Créer un objet Service pour GitLab
 # service_gitlab = client.V1Service(
@@ -171,10 +224,28 @@ service = client.V1Service(
 #)
 
 # Créer des objets Ingress
+tls_config = client.V1IngressTLS(
+    hosts=[
+        f"file.{unique_name_suffix}.vsnu.fr", 
+        f"code.{unique_name_suffix}.vsnu.fr", 
+        f"memo.{unique_name_suffix}.vsnu.fr",
+        f"{unique_name_suffix}.vsnu.fr"
+    ],
+    secret_name=f"yourdomain-tls{unique_name_suffix}"
+)
+
+# Création de l'Ingress
 ingress = client.NetworkingV1Api().create_namespaced_ingress(
     namespace="default",
     body=client.V1Ingress(
-        metadata=client.V1ObjectMeta(name=f"ingress{unique_name_suffix}", annotations={"nginx.ingress.kubernetes.io/rewrite-target": "/", "kubernetes.io/ingress.class": "nginx"}),
+        metadata=client.V1ObjectMeta(
+            name=f"ingress{unique_name_suffix}", 
+            annotations={
+                "nginx.ingress.kubernetes.io/rewrite-target": "/", 
+                "kubernetes.io/ingress.class": "nginx", 
+                "cert-manager.io/cluster-issuer": "letsencrypt-prod"
+            }
+        ),
         spec=client.V1IngressSpec(
             rules=[
                 client.V1IngressRule(
@@ -186,10 +257,8 @@ ingress = client.NetworkingV1Api().create_namespaced_ingress(
                                 path_type="Prefix",
                                 backend=client.V1IngressBackend(
                                     service=client.V1IngressServiceBackend(
-                                        port=client.V1ServiceBackendPort(
-                                            number=80
-                                        ),
-                                        name=f"common-service{unique_name_suffix}"
+                                        port=client.V1ServiceBackendPort(number=80),
+                                        name=f"filebrowser-service{unique_name_suffix}"
                                     )
                                 )
                             )
@@ -205,10 +274,8 @@ ingress = client.NetworkingV1Api().create_namespaced_ingress(
                                 path_type="Prefix",
                                 backend=client.V1IngressBackend(
                                     service=client.V1IngressServiceBackend(
-                                        port=client.V1ServiceBackendPort(
-                                            number=8443
-                                        ),
-                                        name=f"common-service{unique_name_suffix}"
+                                        port=client.V1ServiceBackendPort(number=8443),
+                                        name=f"vscode-service{unique_name_suffix}"
                                     )
                                 )
                             )
@@ -224,85 +291,49 @@ ingress = client.NetworkingV1Api().create_namespaced_ingress(
                                 path_type="Prefix",
                                 backend=client.V1IngressBackend(
                                     service=client.V1IngressServiceBackend(
-                                        port=client.V1ServiceBackendPort(
-                                            number=5230
-                                        ),
-                                        name=f"common-service{unique_name_suffix}"
+                                        port=client.V1ServiceBackendPort(number=5230),
+                                        name=f"memo-service{unique_name_suffix}"
                                     )
                                 )
                             )
                         ]
                     )
                 ),
-                # client.V1IngressRule(
-                #     host=f"gitlab-{unique_name_suffix}.vsnu.fr",
-                #     http=client.V1HTTPIngressRuleValue(
-                #         paths=[
-                #             client.V1HTTPIngressPath(
-                #                 path="/",
-                #                 path_type="Prefix",
-                #                 backend=client.V1IngressBackend(
-                #                     service=client.V1IngressServiceBackend(
-                #                         port=client.V1ServiceBackendPort(
-                #                             number=80
-                #                         ),
-                #                         name=f"gitlab-service{unique_name_suffix}"
-                #                     )
-                #                 )
-                #             )
-                #         ]
-                #     )
-                # ),
-                # client.V1IngressRule(
-                #     host=f"gitlab{unique_name_suffix}.mondomaine.fr",
-                #     http=client.V1HTTPIngressRuleValue(
-                #         paths=[
-                #             client.V1HTTPIngressPath(
-                #                 path="/",
-                #                 path_type="Prefix",
-                #                 backend=client.V1IngressBackend(
-                #                     service=client.V1IngressServiceBackend(
-                #                         port=client.V1ServiceBackendPort(
-                #                             number=443
-                #                         ),
-                #                         name=f"gitlab-service{unique_name_suffix}"
-                #                     )
-                #                 )
-                #             )
-                #         ]
-                #     )
-                #),
-                # client.V1IngressRule(
-                #     host=f"gitlab{unique_name_suffix}.mondomaine.fr",
-                #     http=client.V1HTTPIngressRuleValue(
-                #         paths=[
-                #             client.V1HTTPIngressPath(
-                #                 path="/",
-                #                 path_type="Prefix",
-                #                 backend=client.V1IngressBackend(
-                #                     service=client.V1IngressServiceBackend(
-                #                         port=client.V1ServiceBackendPort(
-                #                             number=22
-                #                         ),
-                #                         name=f"gitlab-service{unique_name_suffix}"
-                #                     )
-                #                 )
-                #             )
-                #         ]
-                #     )
-                # ),
-            ]
+                client.V1IngressRule(
+                    host=f"{unique_name_suffix}.vsnu.fr",
+                    http=client.V1HTTPIngressRuleValue(
+                        paths=[
+                            client.V1HTTPIngressPath(
+                                path="/",
+                                path_type="Prefix",
+                                backend=client.V1IngressBackend(
+                                    service=client.V1IngressServiceBackend(
+                                        port=client.V1ServiceBackendPort(number=80),
+                                        name=f"httpd-service{unique_name_suffix}"
+                                    )
+                                )
+                            )
+                        ]
+                    )
+                ),
+                # Ajoutez d'autres règles si nécessaire
+            ],
+            tls=[tls_config]  # Configuration TLS
         )
     )
 )
-
 # Créer des objets à l'aide de l'API Kubernetes
 api_instance = client.CoreV1Api()
 api_instance.create_persistent_volume(volume)
 api_instance.create_namespaced_persistent_volume_claim(body=volume_claim, namespace="default")
 api_instance.create_namespaced_pod(body=pod_vscode, namespace="default")
 api_instance.create_namespaced_pod(body=pod_memo, namespace="default")
+api_instance.create_namespaced_pod(body=pod_httpd, namespace="default")
 #api_instance.create_namespaced_pod(body=pod_gitlab, namespace="default")
 api_instance.create_namespaced_pod(body=pod_filebrowser, namespace="default")
-api_instance.create_namespaced_service(body=service, namespace="default")
+api_instance.create_namespaced_service(body=servicefilebrowser, namespace="default")
+api_instance.create_namespaced_service(body=servicevscode, namespace="default")
+api_instance.create_namespaced_service(body=servicememo, namespace="default")
+api_instance.create_namespaced_service(body=servicehttpd, namespace="default")
+
 #api_instance.create_namespaced_service(body=service_gitlab, namespace="default")

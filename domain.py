@@ -41,6 +41,13 @@ result = client.post("/domain/zone/vsnu.fr/record",
 	ttl = 0, # TTL of the record (type: integer)
 )
 
+result = client.post("/domain/zone/vsnu.fr/record",
+	fieldType = "A", #  (type: )
+	subDomain = domain, # Record subDomain (type: string)
+	target = "8282.65.60.141", # Target of the record (type: string)
+	ttl = 0, # TTL of the record (type: integer)
+)
+
 record_id = result.get('id', None)
 
 if record_id is not None:
