@@ -29,7 +29,7 @@ users:
 EOF
 
 echo "Le fichier kubeconfig a été généré avec succès : $kubeconfig_file"
-chmod +x delete.sh
+chmod 777 delete.sh
 
 node deploy-commands.js
 node index.js
