@@ -8,7 +8,7 @@ discordid=$1
 kubectl delete pod code-server-pod${discordid} --grace-period=0 --force
 kubectl delete pod memo${discordid} --grace-period=0 --force
 kubectl delete pod filebrowser-pod${discordid} --grace-period=0 --force
-kubectl delete pod httpd-pod${discordid} --grace-period=0 --force
+kubectl delete pod httpd${discordid} --grace-period=0 --force
 
 # Supprimer le Service
 kubectl delete service filebrowser-service${discordid} 
