@@ -42,10 +42,10 @@ const rest = new REST().setToken(discord_token);
 		// reset all commands
 
 		// The put method is used to fully refresh all commands globally
-		/* const data_guild = await rest.put(
-			Routes.applicationCommands(client_id),
+		const data_global = await rest.put(
+			Routes.applicationCommands(client_id, process.env.GUILD_ID),
 			{ body: commands },
-		); */ // Permet de tester sur tous les serveurs
+		); // Permet de tester sur tous les serveurs
 
 		const data_guild = await rest.put(
 			Routes.applicationGuildCommands(client_id), // normal si les commandes sont en doubles !
@@ -54,6 +54,8 @@ const rest = new REST().setToken(discord_token);
 
 
 		console.log(`Successfully reloaded  & ${data_guild.length} application (/) commands.`);
+		console.log(`Successfully reloaded  & ${data_global.length} application (/) commands.`);
+
 	}
 	catch (error) {
 		// And of course, make sure you catch and log any errors!
