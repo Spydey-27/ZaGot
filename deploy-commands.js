@@ -53,7 +53,6 @@ const rest = new REST().setToken(discord_token);
 		); */ // Permet de tester sur un seul serveur
 
 
-		console.log(`Successfully reloaded  & ${data_guild.length} application (/) commands.`);
 		console.log(`Successfully reloaded  & ${data_global.length} application (/) commands.`);
 
 	}
