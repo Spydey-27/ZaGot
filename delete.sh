@@ -10,7 +10,10 @@ kubectl delete pod memo${discordid} --grace-period=0 --force
 kubectl delete pod filebrowser-pod${discordid} --grace-period=0 --force
 
 # Supprimer le Service
-kubectl delete service common-service${discordid}
+kubectl delete service filebrowser-service${discordid} 
+kubectl delete service memo-service${discordid}
+kubectl delete service vscode-service${discordid}
+kubectl delete service httpd-service${discordid}
 
 # Supprimer l'Ingress
 kubectl delete ingress ingress${discordid}
