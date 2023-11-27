@@ -11,7 +11,7 @@ module.exports = {
 
 		async function runPythonScript() {
 			try {
-				await execPromise('./delete.sh' + server);
+				await execPromise('./delete.sh ' + server);
 
 			}
 			catch (error) {
