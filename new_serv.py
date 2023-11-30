@@ -243,8 +243,9 @@ ingress = client.NetworkingV1Api().create_namespaced_ingress(
             annotations={
                 "nginx.ingress.kubernetes.io/rewrite-target": "/", 
                 "kubernetes.io/ingress.class": "nginx", 
-                "cert-manager.io/cluster-issuer": "letsencrypt-prod"
-            }
+                "cert-manager.io/cluster-issuer": "letsencrypt-prod",
+                "nginx.ingress.kubernetes.io/proxy-body-size": "10g"
+                        }
         ),
         spec=client.V1IngressSpec(
             rules=[
