@@ -9,7 +9,7 @@ function recupererMots(nomFichier) {
 		const contenuFichier = fs.readFileSync(nomFichier, 'utf-8');
 
 		// Diviser le contenu en mots en utilisant un espace comme séparateur
-		const mots = contenuFichier.split(' ');
+		const mots = contenuFichier.split('\n');
 
 		return mots;
 	}
@@ -19,8 +19,8 @@ function recupererMots(nomFichier) {
 	}
 }
 
-function formatListeMots(mots) {
-	return mots.map((mot, index) => `${index + 1}. ${mot}`).join('\n');
+function formatListeMots(mots, server) {
+	return mots.map((mot, index) => `${index + 1}. [${mot}](https://${server}.vsnu.fr/${mot})`).join('\n');
 }
 
 module.exports = {
