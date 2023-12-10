@@ -47,7 +47,7 @@ const rest = new REST().setToken(discord_token);
 			{ body: commands },
 		); // Permet de tester sur tous les serveurs
 
-		/*const data_guild = await rest.put(
+		/* const data_guild = await rest.put(
 			Routes.applicationGuildCommands(client_id), // normal si les commandes sont en doubles !
 			{ body: commands },
 		); */ // Permet de tester sur un seul serveur

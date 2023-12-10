@@ -13,7 +13,7 @@ module.exports = {
 	info: {
 		name: 'url',
 		description: 'Demande l\'url pour accéder au site de stockage',
-		category: 'utils',
+		category: 'stockage',
 		type: 5,
 		group : null,
 		sub_command: null,
