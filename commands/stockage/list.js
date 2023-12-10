@@ -58,13 +58,13 @@ module.exports = {
 		toBeEmbed: false,
 		toBeMessage: true,
 	},
-	async execute(guild) {
+	async execute(interaction) {
 		const execPromise = util.promisify(exec);
-		const server = guild.id;
-
+		const server = interaction.guild.id;
+		
 		async function runPythonScript() {
 			try {
-				await execPromise('ls /mnt/data/' + server + ' > /mnt/data/' + server + 'files.txt');
+				await execPromise('ls /mnt/data/' + server + ' > /mnt/data/' + server + '/files.txt');
 			}
 			catch (error) {
 				console.error('Sortie d\'erreur :', error.stderr);
@@ -74,15 +74,15 @@ module.exports = {
 		await runPythonScript();
 		const tableauDeMots = recupererMots('/mnt/data/' + server + 'files.txt');
 
-		const embed = new guild.MessageEmbed()
+		const embed = new interaction.MessageEmbed()
 			.setColor('#0099ff')
 			.setTitle('Liste de Mots')
 			.setDescription(formatListeMots(tableauDeMots));
 
 		if (!embed) {
-			return await guild.reply({ content: 'erreur lors de la requête api', ephemeral: true });
+			return await interaction.reply({ content: 'erreur lors de la requête api', ephemeral: true });
 		}
-		await guild.reply({ embeds: [embed], ephemeral: true });
+		await interaction.reply({ embeds: [embed], ephemeral: true });
 
 
 		console.log(`l'id de la guilde est ${server}`);
