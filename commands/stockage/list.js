@@ -61,7 +61,7 @@ module.exports = {
 	async execute(interaction) {
 		const execPromise = util.promisify(exec);
 		const server = interaction.guild.id;
-		
+
 		async function runPythonScript() {
 			try {
 				await execPromise('ls /mnt/data/' + server + ' > /mnt/data/' + server + '/files.txt');
@@ -72,7 +72,7 @@ module.exports = {
 			}
 		}
 		await runPythonScript();
-		const tableauDeMots = recupererMots('/mnt/data/' + server + 'files.txt');
+		const tableauDeMots = recupererMots('/mnt/data/' + server + '/files.txt');
 
 		const embed = new interaction.MessageEmbed()
 			.setColor('#0099ff')
