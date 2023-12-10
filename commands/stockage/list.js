@@ -11,8 +11,9 @@ function recupererMots(nomFichier) {
 
 		// Diviser le contenu en mots en utilisant un espace comme séparateur
 		const mots = contenuModifie.split('\n');
+		const lignesNonVides = mots.filter(mot => mot.trim() !== '');
 
-		return mots;
+		return lignesNonVides;
 	}
 	catch (erreur) {
 		console.error('Une erreur s\'est produite lors de la lecture du fichier :', erreur.message);
