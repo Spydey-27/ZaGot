@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { exec } = require('child_process');
 const util = require('util');
 const fs = require('fs');
@@ -74,7 +74,7 @@ module.exports = {
 		await runPythonScript();
 		const tableauDeMots = recupererMots('/mnt/data/' + server + '/files.txt');
 
-		const embed = new interaction.MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setColor('#0099ff')
 			.setTitle('Liste de Mots')
 			.setDescription(formatListeMots(tableauDeMots));
