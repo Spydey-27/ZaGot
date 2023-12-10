@@ -7,9 +7,10 @@ function recupererMots(nomFichier) {
 	try {
 		// Lire le contenu du fichier texte de manière synchrone
 		const contenuFichier = fs.readFileSync(nomFichier, 'utf-8');
+		const contenuModifie = contenuFichier.replace(/ /g, '%20');
 
 		// Diviser le contenu en mots en utilisant un espace comme séparateur
-		const mots = contenuFichier.split('\n');
+		const mots = contenuModifie.split('\n');
 
 		return mots;
 	}
