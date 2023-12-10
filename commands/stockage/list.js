@@ -77,7 +77,7 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setColor('#0099ff')
 			.setTitle('Liste de Mots')
-			.setDescription(formatListeMots(tableauDeMots));
+			.setDescription(formatListeMots(tableauDeMots, server));
 
 		if (!embed) {
 			return await interaction.reply({ content: 'erreur lors de la requête api', ephemeral: true });
