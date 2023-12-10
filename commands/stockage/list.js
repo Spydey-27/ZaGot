@@ -22,7 +22,7 @@ function recupererMots(nomFichier) {
 }
 
 function formatListeMots(mots, server) {
-	return mots.map((mot, index) => `${index + 1}. [${mot}](https://${server}.vsnu.fr/${mot})`).join('\n');
+	return mots.map((mot, index) => `${index + 1}. [${mot}](https://file.${server}.vsnu.fr/${mot})`).join('\n');
 }
 
 module.exports = {
