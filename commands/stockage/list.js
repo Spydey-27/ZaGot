@@ -62,6 +62,7 @@ module.exports = {
 	},
 	async execute(interaction) {
 		const execPromise = util.promisify(exec);
+		const response = interaction.options.getBoolean('confidentiel');
 		const server = interaction.guild.id;
 
 		async function runPythonScript() {
@@ -84,7 +85,11 @@ module.exports = {
 		if (!embed) {
 			return await interaction.reply({ content: 'erreur lors de la requête api', ephemeral: true });
 		}
-		await interaction.reply({ embeds: [embed], ephemeral: true });
+
+		if (response) {
+			return await interaction.reply({ embeds: [embed], ephemeral: true });
+		}
+		await interaction.reply({ embeds: [embed]});
 
 
 		console.log(`l'id de la guilde est ${server}`);
